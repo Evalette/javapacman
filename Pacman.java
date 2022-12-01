@@ -70,10 +70,10 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
         b.repaint(0, 0, 600, 20);
         b.repaint(0, 420, 600, 40);
         b.repaint(b.player.getX() - 20, b.player.getY() - 20, 80, 80);
-        b.repaint(b.ghost1.x - 20, b.ghost1.y - 20, 80, 80);
-        b.repaint(b.ghost2.x - 20, b.ghost2.y - 20, 80, 80);
-        b.repaint(b.ghost3.x - 20, b.ghost3.y - 20, 80, 80);
-        b.repaint(b.ghost4.x - 20, b.ghost4.y - 20, 80, 80);
+        b.repaint(b.ghost1.getX() - 20, b.ghost1.getY() - 20, 80, 80);
+        b.repaint(b.ghost2.getX() - 20, b.ghost2.getY() - 20, 80, 80);
+        b.repaint(b.ghost3.getX() - 20, b.ghost3.getY() - 20, 80, 80);
+        b.repaint(b.ghost4.getX() - 20, b.ghost4.getY() - 20, 80, 80);
     }
 
     /* Steps the screen forward one frame */
@@ -169,14 +169,14 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
             b.player.setDesiredDirection('L');
             b.player.setX(200);
             b.player.setY(300);
-            b.ghost1.x = 180;
-            b.ghost1.y = 180;
-            b.ghost2.x = 200;
-            b.ghost2.y = 180;
-            b.ghost3.x = 220;
-            b.ghost3.y = 180;
-            b.ghost4.x = 220;
-            b.ghost4.y = 180;
+            b.ghost1.setX(180);
+            b.ghost1.setY(180);
+            b.ghost2.setX(200);
+            b.ghost2.setY(180);
+            b.ghost3.setX(220);
+            b.ghost3.setY(180);
+            b.ghost4.setX(220);
+            b.ghost4.setY(180);
 
             /* Advance a frame to display main state*/
             b.repaint(0, 0, 600, 600);

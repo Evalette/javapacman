@@ -403,48 +403,50 @@ class Player extends Mover {
 
 /* Ghost class controls the ghost. */
 class Ghost extends Mover {
-    /* Direction ghost is heading */ char direction;
+    /* Direction ghost is heading */ private char direction;
 
-    /* Last ghost location*/ int lastX;
-    int lastY;
+    /* Last ghost location*/ private int lastX;
+    private int lastY;
 
-    /* Current ghost location */ int x;
-    int y;
+    /* Current ghost location */ private int x;
+    private int y;
 
-    /* The pellet the ghost is on top of */ int pelletX, pelletY;
+    /* The pellet the ghost is on top of */ private int pelletX;
+    private int pelletY;
 
-    /* The pellet the ghost was last on top of */ int lastPelletX, lastPelletY;
+    /* The pellet the ghost was last on top of */ private int lastPelletX;
+    private int lastPelletY;
 
     /*Constructor places ghost and updates states*/
     public Ghost(int x, int y) {
-        direction = 'L';
-        pelletX = x / getGridSize() - 1;
-        pelletY = x / getGridSize() - 1;
-        lastPelletX = pelletX;
-        lastPelletY = pelletY;
-        this.lastX = x;
-        this.lastY = y;
-        this.x = x;
-        this.y = y;
+        setDirection('L');
+        setPelletX(x / getGridSize() - 1);
+        setPelletY(x / getGridSize() - 1);
+        setLastPelletX(getPelletX());
+        setLastPelletY(getPelletY());
+        this.setLastX(x);
+        this.setLastY(y);
+        this.setX(x);
+        this.setY(y);
     }
 
     /* update pellet status */
     public void updatePellet() {
         int tempX, tempY;
-        tempX = x / getGridSize() - 1;
-        tempY = y / getGridSize() - 1;
-        if (tempX != pelletX || tempY != pelletY) {
-            lastPelletX = pelletX;
-            lastPelletY = pelletY;
-            pelletX = tempX;
-            pelletY = tempY;
+        tempX = getX() / getGridSize() - 1;
+        tempY = getY() / getGridSize() - 1;
+        if (tempX != getPelletX() || tempY != getPelletY()) {
+            setLastPelletX(getPelletX());
+            setLastPelletY(getPelletY());
+            setPelletX(tempX);
+            setPelletY(tempY);
         }
 
     }
 
     /* Determines if the location is one where the ghost has to make a decision*/
     public boolean isChoiceDest() {
-        if (x % getGridSize() == 0 && y % getGridSize() == 0) {
+        if (getX() % getGridSize() == 0 && getY() % getGridSize() == 0) {
             return true;
         }
         return false;
@@ -454,10 +456,10 @@ class Ghost extends Mover {
     public char newDirection() {
         int random;
         char backwards = 'U';
-        int newX = x, newY = y;
-        int lookX = x, lookY = y;
+        int newX = getX(), newY = getY();
+        int lookX = getX(), lookY = getY();
         Set<Character> set = new HashSet<Character>();
-        switch (direction) {
+        switch (getDirection()) {
             case 'L':
                 backwards = 'R';
                 break;
@@ -481,10 +483,10 @@ class Ghost extends Mover {
                 break;
             }
 
-            newX = x;
-            newY = y;
-            lookX = x;
-            lookY = y;
+            newX = getX();
+            newY = getY();
+            lookX = getX();
+            lookY = getY();
 
             /* Randomly choose a direction */
             random = (int) (Math.random() * 4) + 1;
@@ -514,29 +516,101 @@ class Ghost extends Mover {
 
     /* Random move function for ghost */
     public void move() {
-        lastX = x;
-        lastY = y;
+        setLastX(getX());
+        setLastY(getY());
 
         /* If we can make a decision, pick a new direction randomly */
         if (isChoiceDest()) {
-            direction = newDirection();
+            setDirection(newDirection());
         }
 
         /* If that direction is valid, move that way */
-        switch (direction) {
+        switch (getDirection()) {
             case 'L':
-                if (isValidDest(x - getIncrement(), y)) x -= getIncrement();
+                if (isValidDest(getX() - getIncrement(), getY())) setX(getX() - getIncrement());
                 break;
             case 'R':
-                if (isValidDest(x + getGridSize(), y)) x += getIncrement();
+                if (isValidDest(getX() + getGridSize(), getY())) setX(getX() + getIncrement());
                 break;
             case 'U':
-                if (isValidDest(x, y - getIncrement())) y -= getIncrement();
+                if (isValidDest(getX(), getY() - getIncrement())) setY(getY() - getIncrement());
                 break;
             case 'D':
-                if (isValidDest(x, y + getGridSize())) y += getIncrement();
+                if (isValidDest(getX(), getY() + getGridSize())) setY(getY() + getIncrement());
                 break;
         }
+    }
+
+    public char getDirection() {
+        return direction;
+    }
+
+    public void setDirection(char direction) {
+        this.direction = direction;
+    }
+
+    public int getLastX() {
+        return lastX;
+    }
+
+    public void setLastX(int lastX) {
+        this.lastX = lastX;
+    }
+
+    public int getLastY() {
+        return lastY;
+    }
+
+    public void setLastY(int lastY) {
+        this.lastY = lastY;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public int getPelletX() {
+        return pelletX;
+    }
+
+    public void setPelletX(int pelletX) {
+        this.pelletX = pelletX;
+    }
+
+    public int getPelletY() {
+        return pelletY;
+    }
+
+    public void setPelletY(int pelletY) {
+        this.pelletY = pelletY;
+    }
+
+    public int getLastPelletX() {
+        return lastPelletX;
+    }
+
+    public void setLastPelletX(int lastPelletX) {
+        this.lastPelletX = lastPelletX;
+    }
+
+    public int getLastPelletY() {
+        return lastPelletY;
+    }
+
+    public void setLastPelletY(int lastPelletY) {
+        this.lastPelletY = lastPelletY;
     }
 }
 
@@ -987,22 +1061,22 @@ public class Board extends JPanel {
 
         /* Drawing optimization */
         g.copyArea(player.getX() - 20, player.getY() - 20, 80, 80, 0, 0);
-        g.copyArea(ghost1.x - 20, ghost1.y - 20, 80, 80, 0, 0);
-        g.copyArea(ghost2.x - 20, ghost2.y - 20, 80, 80, 0, 0);
-        g.copyArea(ghost3.x - 20, ghost3.y - 20, 80, 80, 0, 0);
-        g.copyArea(ghost4.x - 20, ghost4.y - 20, 80, 80, 0, 0);
+        g.copyArea(ghost1.getX() - 20, ghost1.getY() - 20, 80, 80, 0, 0);
+        g.copyArea(ghost2.getX() - 20, ghost2.getY() - 20, 80, 80, 0, 0);
+        g.copyArea(ghost3.getX() - 20, ghost3.getY() - 20, 80, 80, 0, 0);
+        g.copyArea(ghost4.getX() - 20, ghost4.getY() - 20, 80, 80, 0, 0);
 
 
 
         /* Detect collisions */
-        if (player.getX() == ghost1.x && Math.abs(player.getY() - ghost1.y) < 10) oops = true;
-        else if (player.getX() == ghost2.x && Math.abs(player.getY() - ghost2.y) < 10) oops = true;
-        else if (player.getX() == ghost3.x && Math.abs(player.getY() - ghost3.y) < 10) oops = true;
-        else if (player.getX() == ghost4.x && Math.abs(player.getY() - ghost4.y) < 10) oops = true;
-        else if (player.getY() == ghost1.y && Math.abs(player.getX() - ghost1.x) < 10) oops = true;
-        else if (player.getY() == ghost2.y && Math.abs(player.getX() - ghost2.x) < 10) oops = true;
-        else if (player.getY() == ghost3.y && Math.abs(player.getX() - ghost3.x) < 10) oops = true;
-        else if (player.getY() == ghost4.y && Math.abs(player.getX() - ghost4.x) < 10) oops = true;
+        if (player.getX() == ghost1.getX() && Math.abs(player.getY() - ghost1.getY()) < 10) oops = true;
+        else if (player.getX() == ghost2.getX() && Math.abs(player.getY() - ghost2.getY()) < 10) oops = true;
+        else if (player.getX() == ghost3.getX() && Math.abs(player.getY() - ghost3.getY()) < 10) oops = true;
+        else if (player.getX() == ghost4.getX() && Math.abs(player.getY() - ghost4.getY()) < 10) oops = true;
+        else if (player.getY() == ghost1.getY() && Math.abs(player.getX() - ghost1.getX()) < 10) oops = true;
+        else if (player.getY() == ghost2.getY() && Math.abs(player.getX() - ghost2.getX()) < 10) oops = true;
+        else if (player.getY() == ghost3.getY() && Math.abs(player.getX() - ghost3.getX()) < 10) oops = true;
+        else if (player.getY() == ghost4.getY() && Math.abs(player.getX() - ghost4.getX()) < 10) oops = true;
 
         /* Kill the pacman */
         if (oops && !stopped) {
@@ -1024,10 +1098,10 @@ public class Board extends JPanel {
         /* Delete the players and ghosts */
         g.setColor(Color.BLACK);
         g.fillRect(player.getLastX(), player.getLastY(), 20, 20);
-        g.fillRect(ghost1.lastX, ghost1.lastY, 20, 20);
-        g.fillRect(ghost2.lastX, ghost2.lastY, 20, 20);
-        g.fillRect(ghost3.lastX, ghost3.lastY, 20, 20);
-        g.fillRect(ghost4.lastX, ghost4.lastY, 20, 20);
+        g.fillRect(ghost1.getLastX(), ghost1.getLastY(), 20, 20);
+        g.fillRect(ghost2.getLastX(), ghost2.getLastY(), 20, 20);
+        g.fillRect(ghost3.getLastX(), ghost3.getLastY(), 20, 20);
+        g.fillRect(ghost4.getLastX(), ghost4.getLastY(), 20, 20);
 
         /* Eat pellets */
         if (pellets[player.getPelletX()][player.getPelletY()] && New != 2 && New != 3) {
@@ -1077,26 +1151,30 @@ public class Board extends JPanel {
 
 
         /* Replace pellets that have been run over by ghosts */
-        if (pellets[ghost1.lastPelletX][ghost1.lastPelletY]) fillPellet(ghost1.lastPelletX, ghost1.lastPelletY, g);
-        if (pellets[ghost2.lastPelletX][ghost2.lastPelletY]) fillPellet(ghost2.lastPelletX, ghost2.lastPelletY, g);
-        if (pellets[ghost3.lastPelletX][ghost3.lastPelletY]) fillPellet(ghost3.lastPelletX, ghost3.lastPelletY, g);
-        if (pellets[ghost4.lastPelletX][ghost4.lastPelletY]) fillPellet(ghost4.lastPelletX, ghost4.lastPelletY, g);
+        if (pellets[ghost1.getLastPelletX()][ghost1.getLastPelletY()])
+            fillPellet(ghost1.getLastPelletX(), ghost1.getLastPelletY(), g);
+        if (pellets[ghost2.getLastPelletX()][ghost2.getLastPelletY()])
+            fillPellet(ghost2.getLastPelletX(), ghost2.getLastPelletY(), g);
+        if (pellets[ghost3.getLastPelletX()][ghost3.getLastPelletY()])
+            fillPellet(ghost3.getLastPelletX(), ghost3.getLastPelletY(), g);
+        if (pellets[ghost4.getLastPelletX()][ghost4.getLastPelletY()])
+            fillPellet(ghost4.getLastPelletX(), ghost4.getLastPelletY(), g);
 
 
         /*Draw the ghosts */
         if (ghost1.getFrameCount() < 5) {
             /* Draw first frame of ghosts */
-            g.drawImage(ghost10, ghost1.x, ghost1.y, Color.BLACK, null);
-            g.drawImage(ghost20, ghost2.x, ghost2.y, Color.BLACK, null);
-            g.drawImage(ghost30, ghost3.x, ghost3.y, Color.BLACK, null);
-            g.drawImage(ghost40, ghost4.x, ghost4.y, Color.BLACK, null);
+            g.drawImage(ghost10, ghost1.getX(), ghost1.getY(), Color.BLACK, null);
+            g.drawImage(ghost20, ghost2.getX(), ghost2.getY(), Color.BLACK, null);
+            g.drawImage(ghost30, ghost3.getX(), ghost3.getY(), Color.BLACK, null);
+            g.drawImage(ghost40, ghost4.getX(), ghost4.getY(), Color.BLACK, null);
             ghost1.setFrameCount(ghost1.getFrameCount() + 1);
         } else {
             /* Draw second frame of ghosts */
-            g.drawImage(ghost11, ghost1.x, ghost1.y, Color.BLACK, null);
-            g.drawImage(ghost21, ghost2.x, ghost2.y, Color.BLACK, null);
-            g.drawImage(ghost31, ghost3.x, ghost3.y, Color.BLACK, null);
-            g.drawImage(ghost41, ghost4.x, ghost4.y, Color.BLACK, null);
+            g.drawImage(ghost11, ghost1.getX(), ghost1.getY(), Color.BLACK, null);
+            g.drawImage(ghost21, ghost2.getX(), ghost2.getY(), Color.BLACK, null);
+            g.drawImage(ghost31, ghost3.getX(), ghost3.getY(), Color.BLACK, null);
+            g.drawImage(ghost41, ghost4.getX(), ghost4.getY(), Color.BLACK, null);
             if (ghost1.getFrameCount() >= 10) ghost1.setFrameCount(0);
             else ghost1.setFrameCount(ghost1.getFrameCount() + 1);
         }
