@@ -97,7 +97,7 @@ class Mover {
         int random;
         char backwards = 'U';
         int lookX = getX(), lookY = getY();
-        Set<Character> set = new HashSet<Character>();
+        Set<Character> set = new HashSet<>();
         switch (getDirection()) {
             case 'L' -> backwards = 'R';
             case 'R' -> backwards = 'L';
