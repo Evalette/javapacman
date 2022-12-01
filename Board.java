@@ -99,7 +99,6 @@ class Mover {
     public char newDirection() {
         int random;
         char backwards = 'U';
-        int newX = getX(), newY = getY();
         int lookX = getX(), lookY = getY();
         Set<Character> set = new HashSet<Character>();
         switch (getDirection()) {
@@ -126,8 +125,6 @@ class Mover {
                 break;
             }
 
-            newX = getX();
-            newY = getY();
             lookX = getX();
             lookY = getY();
 
@@ -135,19 +132,15 @@ class Mover {
             random = (int) (Math.random() * 4) + 1;
             if (random == 1) {
                 newDirection = 'L';
-                newX -= getIncrement();
                 lookX -= getIncrement();
             } else if (random == 2) {
                 newDirection = 'R';
-                newX += getIncrement();
                 lookX += getGridSize();
             } else if (random == 3) {
                 newDirection = 'U';
-                newY -= getIncrement();
                 lookY -= getIncrement();
             } else if (random == 4) {
                 newDirection = 'D';
-                newY += getIncrement();
                 lookY += getGridSize();
             }
             if (newDirection != backwards) {
