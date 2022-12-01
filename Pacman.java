@@ -59,7 +59,7 @@ public class Pacman implements MouseListener, KeyListener {
     }
 
     /* This repaint function repaints only the parts of the screen that may have changed.
-       Namely the area around every player ghost and the menu bars
+       namely the area around every player ghost and the menu bars
     */
     public void repaint() {
         if (b.player.isTeleport()) {
@@ -232,7 +232,7 @@ public class Pacman implements MouseListener, KeyListener {
         repaint();
     }
 
-    /* This function detects user clicks on the menu items on the bottom of the screen */
+    /* This function detects user clicks on the menu items at bottom of the screen */
     public void mousePressed(MouseEvent e) {
         if (b.titleScreen || b.winScreen || b.overScreen) {
             /* If we aren't in the game where a menu is showing, ignore clicks */

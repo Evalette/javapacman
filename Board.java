@@ -9,7 +9,7 @@ import java.io.*;
 
 /* Both Player and Ghost inherit Mover.  Has generic functions relevant to both*/
 class Mover {
-    /* Framecount is used to count animation frames*/ private int frameCount = 0;
+    /* FrameCount is used to count animation frames*/ private int frameCount = 0;
 
     /* State contains the game map */ private boolean[][] state;
 
@@ -753,7 +753,7 @@ public class Board extends JPanel {
 
 
     /* Function is called during drawing of the map.
-       Whenever the a portion of the map is covered up with a barrier,
+       Whenever a portion of the map is covered up with a barrier,
        the map and pellets arrays are updated accordingly to note
        that those are invalid locations to travel or put pellets
     */
@@ -996,7 +996,7 @@ public class Board extends JPanel {
             return;
         }
 
-        /* If need to update the high scores, redraw the top menu bar */
+        /* If you need to update the high scores, redraw the top menu bar */
         if (clearHighScores) {
             g.setColor(Color.BLACK);
             g.fillRect(0, 0, 600, 18);
@@ -1007,7 +1007,7 @@ public class Board extends JPanel {
             else g.drawString("Score: " + (currScore) + "\t High Score: " + highScore, 20, 10);
         }
 
-        /* oops is set to true when pacman has lost a life */
+        /* oops, is set to true, when pacman has lost a life. */
         boolean oops = false;
 
         /* Game initialization */
