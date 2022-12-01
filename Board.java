@@ -95,38 +95,38 @@ class Mover {
 
 /* This is the pacman object */
 class Player extends Mover {
-    /* Direction is used in demoMode, currDirection and desiredDirection are used in non demoMode*/ char direction;
-    char currDirection;
-    char desiredDirection;
+    /* Direction is used in demoMode, currDirection and desiredDirection are used in non demoMode*/ private char direction;
+    private char currDirection;
+    private char desiredDirection;
 
-    /* Keeps track of pellets eaten to determine end of game */ int pelletsEaten;
+    /* Keeps track of pellets eaten to determine end of game */ private int pelletsEaten;
 
-    /* Last location */ int lastX;
-    int lastY;
+    /* Last location */ private int lastX;
+    private int lastY;
 
-    /* Current location */ int x;
-    int y;
+    /* Current location */ private int x;
+    private int y;
 
-    /* Which pellet the pacman is on top of */ int pelletX;
-    int pelletY;
+    /* Which pellet the pacman is on top of */ private int pelletX;
+    private int pelletY;
 
-    /* teleport is true when travelling through the teleport tunnels*/ boolean teleport;
+    /* teleport is true when travelling through the teleport tunnels*/ private boolean teleport;
 
-    /* Stopped is set when the pacman is not moving or has been killed */ boolean stopped = false;
+    /* Stopped is set when the pacman is not moving or has been killed */ private boolean stopped = false;
 
     /* Constructor places pacman in initial location and orientation */
     public Player(int x, int y) {
 
-        teleport = false;
-        pelletsEaten = 0;
-        pelletX = x / getGridSize() - 1;
-        pelletY = y / getGridSize() - 1;
-        this.lastX = x;
-        this.lastY = y;
-        this.x = x;
-        this.y = y;
-        currDirection = 'L';
-        desiredDirection = 'L';
+        setTeleport(false);
+        setPelletsEaten(0);
+        setPelletX(x / getGridSize() - 1);
+        setPelletY(y / getGridSize() - 1);
+        this.setLastX(x);
+        this.setLastY(y);
+        this.setX(x);
+        this.setY(y);
+        setCurrDirection('L');
+        setDesiredDirection('L');
     }
 
 
@@ -134,10 +134,10 @@ class Player extends Mover {
     public char newDirection() {
         int random;
         char backwards = 'U';
-        int newX = x, newY = y;
-        int lookX = x, lookY = y;
+        int newX = getX(), newY = getY();
+        int lookX = getX(), lookY = getY();
         Set<Character> set = new HashSet<Character>();
-        switch (direction) {
+        switch (getDirection()) {
             case 'L':
                 backwards = 'R';
                 break;
@@ -157,10 +157,10 @@ class Player extends Mover {
                 newDirection = backwards;
                 break;
             }
-            newX = x;
-            newY = y;
-            lookX = x;
-            lookY = y;
+            newX = getX();
+            newY = getY();
+            lookX = getX();
+            lookY = getY();
             random = (int) (Math.random() * 4) + 1;
             if (random == 1) {
                 newDirection = 'L';
@@ -188,7 +188,7 @@ class Player extends Mover {
 
     /* This function is used for demoMode.  It is copied from the Ghost class.  See that for comments */
     public boolean isChoiceDest() {
-        if (x % getGridSize() == 0 && y % getGridSize() == 0) {
+        if (getX() % getGridSize() == 0 && getY() % getGridSize() == 0) {
             return true;
         }
         return false;
@@ -196,112 +196,208 @@ class Player extends Mover {
 
     /* This function is used for demoMode.  It is copied from the Ghost class.  See that for comments */
     public void demoMove() {
-        lastX = x;
-        lastY = y;
+        setLastX(getX());
+        setLastY(getY());
         if (isChoiceDest()) {
-            direction = newDirection();
+            setDirection(newDirection());
         }
-        switch (direction) {
+        switch (getDirection()) {
             case 'L':
-                if (isValidDest(x - getIncrement(), y)) {
-                    x -= getIncrement();
-                } else if (y == 9 * getGridSize() && x < 2 * getGridSize()) {
-                    x = getMax() - getGridSize() * 1;
-                    teleport = true;
+                if (isValidDest(getX() - getIncrement(), getY())) {
+                    setX(getX() - getIncrement());
+                } else if (getY() == 9 * getGridSize() && getX() < 2 * getGridSize()) {
+                    setX(getMax() - getGridSize() * 1);
+                    setTeleport(true);
                 }
                 break;
             case 'R':
-                if (isValidDest(x + getGridSize(), y)) {
-                    x += getIncrement();
-                } else if (y == 9 * getGridSize() && x > getMax() - getGridSize() * 2) {
-                    x = 1 * getGridSize();
-                    teleport = true;
+                if (isValidDest(getX() + getGridSize(), getY())) {
+                    setX(getX() + getIncrement());
+                } else if (getY() == 9 * getGridSize() && getX() > getMax() - getGridSize() * 2) {
+                    setX(1 * getGridSize());
+                    setTeleport(true);
                 }
                 break;
             case 'U':
-                if (isValidDest(x, y - getIncrement())) y -= getIncrement();
+                if (isValidDest(getX(), getY() - getIncrement())) setY(getY() - getIncrement());
                 break;
             case 'D':
-                if (isValidDest(x, y + getGridSize())) y += getIncrement();
+                if (isValidDest(getX(), getY() + getGridSize())) setY(getY() + getIncrement());
                 break;
         }
-        currDirection = direction;
+        setCurrDirection(getDirection());
         setFrameCount(getFrameCount() + 1);
     }
 
     /* The move function moves the pacman for one frame in non demo mode */
     public void move() {
         int gridSize = 20;
-        lastX = x;
-        lastY = y;
+        setLastX(getX());
+        setLastY(getY());
 
         /* Try to turn in the direction input by the user */
         /*Can only turn if we're in center of a grid*/
-        if (x % 20 == 0 && y % 20 == 0 ||
+        if (getX() % 20 == 0 && getY() % 20 == 0 ||
                 /* Or if we're reversing*/
-                (desiredDirection == 'L' && currDirection == 'R') || (desiredDirection == 'R' && currDirection == 'L') || (desiredDirection == 'U' && currDirection == 'D') || (desiredDirection == 'D' && currDirection == 'U')) {
-            switch (desiredDirection) {
+                (getDesiredDirection() == 'L' && getCurrDirection() == 'R') || (getDesiredDirection() == 'R' && getCurrDirection() == 'L') || (getDesiredDirection() == 'U' && getCurrDirection() == 'D') || (getDesiredDirection() == 'D' && getCurrDirection() == 'U')) {
+            switch (getDesiredDirection()) {
                 case 'L':
-                    if (isValidDest(x - getIncrement(), y)) x -= getIncrement();
+                    if (isValidDest(getX() - getIncrement(), getY())) setX(getX() - getIncrement());
                     break;
                 case 'R':
-                    if (isValidDest(x + gridSize, y)) x += getIncrement();
+                    if (isValidDest(getX() + gridSize, getY())) setX(getX() + getIncrement());
                     break;
                 case 'U':
-                    if (isValidDest(x, y - getIncrement())) y -= getIncrement();
+                    if (isValidDest(getX(), getY() - getIncrement())) setY(getY() - getIncrement());
                     break;
                 case 'D':
-                    if (isValidDest(x, y + gridSize)) y += getIncrement();
+                    if (isValidDest(getX(), getY() + gridSize)) setY(getY() + getIncrement());
                     break;
             }
         }
         /* If we haven't moved, then move in the direction the pacman was headed anyway */
-        if (lastX == x && lastY == y) {
-            switch (currDirection) {
+        if (getLastX() == getX() && getLastY() == getY()) {
+            switch (getCurrDirection()) {
                 case 'L':
-                    if (isValidDest(x - getIncrement(), y)) x -= getIncrement();
-                    else if (y == 9 * gridSize && x < 2 * gridSize) {
-                        x = getMax() - gridSize * 1;
-                        teleport = true;
+                    if (isValidDest(getX() - getIncrement(), getY())) setX(getX() - getIncrement());
+                    else if (getY() == 9 * gridSize && getX() < 2 * gridSize) {
+                        setX(getMax() - gridSize * 1);
+                        setTeleport(true);
                     }
                     break;
                 case 'R':
-                    if (isValidDest(x + gridSize, y)) x += getIncrement();
-                    else if (y == 9 * gridSize && x > getMax() - gridSize * 2) {
-                        x = 1 * gridSize;
-                        teleport = true;
+                    if (isValidDest(getX() + gridSize, getY())) setX(getX() + getIncrement());
+                    else if (getY() == 9 * gridSize && getX() > getMax() - gridSize * 2) {
+                        setX(1 * gridSize);
+                        setTeleport(true);
                     }
                     break;
                 case 'U':
-                    if (isValidDest(x, y - getIncrement())) y -= getIncrement();
+                    if (isValidDest(getX(), getY() - getIncrement())) setY(getY() - getIncrement());
                     break;
                 case 'D':
-                    if (isValidDest(x, y + gridSize)) y += getIncrement();
+                    if (isValidDest(getX(), getY() + gridSize)) setY(getY() + getIncrement());
                     break;
             }
         }
 
         /* If we did change direction, update currDirection to reflect that */
         else {
-            currDirection = desiredDirection;
+            setCurrDirection(getDesiredDirection());
         }
 
         /* If we didn't move at all, set the stopped flag */
-        if (lastX == x && lastY == y) stopped = true;
+        if (getLastX() == getX() && getLastY() == getY()) setStopped(true);
 
             /* Otherwise, clear the stopped flag and increment the frameCount for animation purposes*/
         else {
-            stopped = false;
+            setStopped(false);
             setFrameCount(getFrameCount() + 1);
         }
     }
 
     /* Update what pellet the pacman is on top of */
     public void updatePellet() {
-        if (x % getGridSize() == 0 && y % getGridSize() == 0) {
-            pelletX = x / getGridSize() - 1;
-            pelletY = y / getGridSize() - 1;
+        if (getX() % getGridSize() == 0 && getY() % getGridSize() == 0) {
+            setPelletX(getX() / getGridSize() - 1);
+            setPelletY(getY() / getGridSize() - 1);
         }
+    }
+
+    public char getDirection() {
+        return direction;
+    }
+
+    public void setDirection(char direction) {
+        this.direction = direction;
+    }
+
+    public char getCurrDirection() {
+        return currDirection;
+    }
+
+    public void setCurrDirection(char currDirection) {
+        this.currDirection = currDirection;
+    }
+
+    public char getDesiredDirection() {
+        return desiredDirection;
+    }
+
+    public void setDesiredDirection(char desiredDirection) {
+        this.desiredDirection = desiredDirection;
+    }
+
+    public int getPelletsEaten() {
+        return pelletsEaten;
+    }
+
+    public void setPelletsEaten(int pelletsEaten) {
+        this.pelletsEaten = pelletsEaten;
+    }
+
+    public int getLastX() {
+        return lastX;
+    }
+
+    public void setLastX(int lastX) {
+        this.lastX = lastX;
+    }
+
+    public int getLastY() {
+        return lastY;
+    }
+
+    public void setLastY(int lastY) {
+        this.lastY = lastY;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public int getPelletX() {
+        return pelletX;
+    }
+
+    public void setPelletX(int pelletX) {
+        this.pelletX = pelletX;
+    }
+
+    public int getPelletY() {
+        return pelletY;
+    }
+
+    public void setPelletY(int pelletY) {
+        this.pelletY = pelletY;
+    }
+
+    public boolean isTeleport() {
+        return teleport;
+    }
+
+    public void setTeleport(boolean teleport) {
+        this.teleport = teleport;
+    }
+
+    public boolean isStopped() {
+        return stopped;
+    }
+
+    public void setStopped(boolean stopped) {
+        this.stopped = stopped;
     }
 }
 
@@ -753,15 +849,15 @@ public class Board extends JPanel {
             sounds.nomNomStop();
 
             /* Draw the pacman */
-            g.drawImage(pacmanImage, player.x, player.y, Color.BLACK, null);
+            g.drawImage(pacmanImage, player.getX(), player.getY(), Color.BLACK, null);
             g.setColor(Color.BLACK);
 
             /* Kill the pacman */
-            if (dying == 4) g.fillRect(player.x, player.y, 20, 7);
-            else if (dying == 3) g.fillRect(player.x, player.y, 20, 14);
-            else if (dying == 2) g.fillRect(player.x, player.y, 20, 20);
+            if (dying == 4) g.fillRect(player.getX(), player.getY(), 20, 7);
+            else if (dying == 3) g.fillRect(player.getX(), player.getY(), 20, 14);
+            else if (dying == 2) g.fillRect(player.getX(), player.getY(), 20, 20);
             else if (dying == 1) {
-                g.fillRect(player.x, player.y, 20, 20);
+                g.fillRect(player.getX(), player.getY(), 20, 20);
             }
      
       /* Take .1 seconds on each frame of death, and then take 2 seconds
@@ -890,7 +986,7 @@ public class Board extends JPanel {
         }
 
         /* Drawing optimization */
-        g.copyArea(player.x - 20, player.y - 20, 80, 80, 0, 0);
+        g.copyArea(player.getX() - 20, player.getY() - 20, 80, 80, 0, 0);
         g.copyArea(ghost1.x - 20, ghost1.y - 20, 80, 80, 0, 0);
         g.copyArea(ghost2.x - 20, ghost2.y - 20, 80, 80, 0, 0);
         g.copyArea(ghost3.x - 20, ghost3.y - 20, 80, 80, 0, 0);
@@ -899,14 +995,14 @@ public class Board extends JPanel {
 
 
         /* Detect collisions */
-        if (player.x == ghost1.x && Math.abs(player.y - ghost1.y) < 10) oops = true;
-        else if (player.x == ghost2.x && Math.abs(player.y - ghost2.y) < 10) oops = true;
-        else if (player.x == ghost3.x && Math.abs(player.y - ghost3.y) < 10) oops = true;
-        else if (player.x == ghost4.x && Math.abs(player.y - ghost4.y) < 10) oops = true;
-        else if (player.y == ghost1.y && Math.abs(player.x - ghost1.x) < 10) oops = true;
-        else if (player.y == ghost2.y && Math.abs(player.x - ghost2.x) < 10) oops = true;
-        else if (player.y == ghost3.y && Math.abs(player.x - ghost3.x) < 10) oops = true;
-        else if (player.y == ghost4.y && Math.abs(player.x - ghost4.x) < 10) oops = true;
+        if (player.getX() == ghost1.x && Math.abs(player.getY() - ghost1.y) < 10) oops = true;
+        else if (player.getX() == ghost2.x && Math.abs(player.getY() - ghost2.y) < 10) oops = true;
+        else if (player.getX() == ghost3.x && Math.abs(player.getY() - ghost3.y) < 10) oops = true;
+        else if (player.getX() == ghost4.x && Math.abs(player.getY() - ghost4.y) < 10) oops = true;
+        else if (player.getY() == ghost1.y && Math.abs(player.getX() - ghost1.x) < 10) oops = true;
+        else if (player.getY() == ghost2.y && Math.abs(player.getX() - ghost2.x) < 10) oops = true;
+        else if (player.getY() == ghost3.y && Math.abs(player.getX() - ghost3.x) < 10) oops = true;
+        else if (player.getY() == ghost4.y && Math.abs(player.getX() - ghost4.x) < 10) oops = true;
 
         /* Kill the pacman */
         if (oops && !stopped) {
@@ -927,25 +1023,25 @@ public class Board extends JPanel {
 
         /* Delete the players and ghosts */
         g.setColor(Color.BLACK);
-        g.fillRect(player.lastX, player.lastY, 20, 20);
+        g.fillRect(player.getLastX(), player.getLastY(), 20, 20);
         g.fillRect(ghost1.lastX, ghost1.lastY, 20, 20);
         g.fillRect(ghost2.lastX, ghost2.lastY, 20, 20);
         g.fillRect(ghost3.lastX, ghost3.lastY, 20, 20);
         g.fillRect(ghost4.lastX, ghost4.lastY, 20, 20);
 
         /* Eat pellets */
-        if (pellets[player.pelletX][player.pelletY] && New != 2 && New != 3) {
-            lastPelletEatenX = player.pelletX;
-            lastPelletEatenY = player.pelletY;
+        if (pellets[player.getPelletX()][player.getPelletY()] && New != 2 && New != 3) {
+            lastPelletEatenX = player.getPelletX();
+            lastPelletEatenY = player.getPelletY();
 
             /* Play eating sound */
             sounds.nomNom();
 
             /* Increment pellets eaten value to track for end game */
-            player.pelletsEaten++;
+            player.setPelletsEaten(player.getPelletsEaten() + 1);
 
             /* Delete the pellet*/
-            pellets[player.pelletX][player.pelletY] = false;
+            pellets[player.getPelletX()][player.getPelletY()] = false;
 
             /* Increment the score */
             currScore += 50;
@@ -959,7 +1055,7 @@ public class Board extends JPanel {
             else g.drawString("Score: " + (currScore) + "\t High Score: " + highScore, 20, 10);
 
             /* If this was the last pellet */
-            if (player.pelletsEaten == 173) {
+            if (player.getPelletsEaten() == 173) {
                 /*Demo mode can't get a high score */
                 if (!demo) {
                     if (currScore > highScore) {
@@ -974,7 +1070,7 @@ public class Board extends JPanel {
         }
 
         /* If we moved to a location without pellets, stop the sounds */
-        else if ((player.pelletX != lastPelletEatenX || player.pelletY != lastPelletEatenY) || player.stopped) {
+        else if ((player.getPelletX() != lastPelletEatenX || player.getPelletY() != lastPelletEatenY) || player.isStopped()) {
             /* Stop any pacman eating sounds */
             sounds.nomNomStop();
         }
@@ -1008,23 +1104,23 @@ public class Board extends JPanel {
         /* Draw the pacman */
         if (player.getFrameCount() < 5) {
             /* Draw mouth closed */
-            g.drawImage(pacmanImage, player.x, player.y, Color.BLACK, null);
+            g.drawImage(pacmanImage, player.getX(), player.getY(), Color.BLACK, null);
         } else {
             /* Draw mouth open in appropriate direction */
             if (player.getFrameCount() >= 10) player.setFrameCount(0);
 
-            switch (player.currDirection) {
+            switch (player.getCurrDirection()) {
                 case 'L':
-                    g.drawImage(pacmanLeftImage, player.x, player.y, Color.BLACK, null);
+                    g.drawImage(pacmanLeftImage, player.getX(), player.getY(), Color.BLACK, null);
                     break;
                 case 'R':
-                    g.drawImage(pacmanRightImage, player.x, player.y, Color.BLACK, null);
+                    g.drawImage(pacmanRightImage, player.getX(), player.getY(), Color.BLACK, null);
                     break;
                 case 'U':
-                    g.drawImage(pacmanUpImage, player.x, player.y, Color.BLACK, null);
+                    g.drawImage(pacmanUpImage, player.getX(), player.getY(), Color.BLACK, null);
                     break;
                 case 'D':
-                    g.drawImage(pacmanDownImage, player.x, player.y, Color.BLACK, null);
+                    g.drawImage(pacmanDownImage, player.getX(), player.getY(), Color.BLACK, null);
                     break;
             }
         }

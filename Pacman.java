@@ -63,13 +63,13 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
        Namely the area around every player ghost and the menu bars
     */
     public void repaint() {
-        if (b.player.teleport) {
-            b.repaint(b.player.lastX - 20, b.player.lastY - 20, 80, 80);
-            b.player.teleport = false;
+        if (b.player.isTeleport()) {
+            b.repaint(b.player.getLastX() - 20, b.player.getLastY() - 20, 80, 80);
+            b.player.setTeleport(false);
         }
         b.repaint(0, 0, 600, 20);
         b.repaint(0, 420, 600, 40);
-        b.repaint(b.player.x - 20, b.player.y - 20, 80, 80);
+        b.repaint(b.player.getX() - 20, b.player.getY() - 20, 80, 80);
         b.repaint(b.ghost1.x - 20, b.ghost1.y - 20, 80, 80);
         b.repaint(b.ghost2.x - 20, b.ghost2.y - 20, 80, 80);
         b.repaint(b.ghost3.x - 20, b.ghost3.y - 20, 80, 80);
@@ -164,11 +164,11 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
             }
 
             /* Move all game elements back to starting positions and orientations */
-            b.player.currDirection = 'L';
-            b.player.direction = 'L';
-            b.player.desiredDirection = 'L';
-            b.player.x = 200;
-            b.player.y = 300;
+            b.player.setCurrDirection('L');
+            b.player.setDirection('L');
+            b.player.setDesiredDirection('L');
+            b.player.setX(200);
+            b.player.setY(300);
             b.ghost1.x = 180;
             b.ghost1.y = 180;
             b.ghost2.x = 200;
@@ -217,16 +217,16 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
         /* Otherwise, key presses control the player! */
         switch (e.getKeyCode()) {
             case KeyEvent.VK_LEFT:
-                b.player.desiredDirection = 'L';
+                b.player.setDesiredDirection('L');
                 break;
             case KeyEvent.VK_RIGHT:
-                b.player.desiredDirection = 'R';
+                b.player.setDesiredDirection('R');
                 break;
             case KeyEvent.VK_UP:
-                b.player.desiredDirection = 'U';
+                b.player.setDesiredDirection('U');
                 break;
             case KeyEvent.VK_DOWN:
-                b.player.desiredDirection = 'D';
+                b.player.setDesiredDirection('D');
                 break;
         }
 
