@@ -180,7 +180,7 @@ class Player extends Mover {
                 lookY += getGridSize();
             }
             if (newDirection != backwards) {
-                set.add(new Character(newDirection));
+                set.add(newDirection);
             }
         }
         return newDirection;
@@ -508,7 +508,7 @@ class Ghost extends Mover {
                 lookY += getGridSize();
             }
             if (newDirection != backwards) {
-                set.add(new Character(newDirection));
+                set.add(newDirection);
             }
         }
         return newDirection;
