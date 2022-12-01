@@ -102,18 +102,10 @@ class Mover {
         int lookX = getX(), lookY = getY();
         Set<Character> set = new HashSet<Character>();
         switch (getDirection()) {
-            case 'L':
-                backwards = 'R';
-                break;
-            case 'R':
-                backwards = 'L';
-                break;
-            case 'U':
-                backwards = 'D';
-                break;
-            case 'D':
-                backwards = 'U';
-                break;
+            case 'L' -> backwards = 'R';
+            case 'R' -> backwards = 'L';
+            case 'U' -> backwards = 'D';
+            case 'D' -> backwards = 'U';
         }
 
         char newDirection = backwards;
@@ -1123,18 +1115,10 @@ public class Board extends JPanel {
             if (player.getFrameCount() >= 10) player.setFrameCount(0);
 
             switch (player.getCurrDirection()) {
-                case 'L':
-                    g.drawImage(pacmanLeftImage, player.getX(), player.getY(), Color.BLACK, null);
-                    break;
-                case 'R':
-                    g.drawImage(pacmanRightImage, player.getX(), player.getY(), Color.BLACK, null);
-                    break;
-                case 'U':
-                    g.drawImage(pacmanUpImage, player.getX(), player.getY(), Color.BLACK, null);
-                    break;
-                case 'D':
-                    g.drawImage(pacmanDownImage, player.getX(), player.getY(), Color.BLACK, null);
-                    break;
+                case 'L' -> g.drawImage(pacmanLeftImage, player.getX(), player.getY(), Color.BLACK, null);
+                case 'R' -> g.drawImage(pacmanRightImage, player.getX(), player.getY(), Color.BLACK, null);
+                case 'U' -> g.drawImage(pacmanUpImage, player.getX(), player.getY(), Color.BLACK, null);
+                case 'D' -> g.drawImage(pacmanDownImage, player.getX(), player.getY(), Color.BLACK, null);
             }
         }
 

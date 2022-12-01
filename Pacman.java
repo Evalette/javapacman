@@ -211,18 +211,10 @@ public class Pacman implements MouseListener, KeyListener {
 
         /* Otherwise, key presses control the player! */
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_LEFT:
-                b.player.setDesiredDirection('L');
-                break;
-            case KeyEvent.VK_RIGHT:
-                b.player.setDesiredDirection('R');
-                break;
-            case KeyEvent.VK_UP:
-                b.player.setDesiredDirection('U');
-                break;
-            case KeyEvent.VK_DOWN:
-                b.player.setDesiredDirection('D');
-                break;
+            case KeyEvent.VK_LEFT -> b.player.setDesiredDirection('L');
+            case KeyEvent.VK_RIGHT -> b.player.setDesiredDirection('R');
+            case KeyEvent.VK_UP -> b.player.setDesiredDirection('U');
+            case KeyEvent.VK_DOWN -> b.player.setDesiredDirection('D');
         }
 
         repaint();
