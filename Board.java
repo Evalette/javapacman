@@ -9,6 +9,9 @@ import java.io.*;
 
 /* Both Player and Ghost inherit Mover.  Has generic functions relevant to both*/
 class Mover {
+    /* Direction ghost is heading */  protected char direction;
+    /* Current ghost location */  protected int x;
+    protected int y;
     /* FrameCount is used to count animation frames*/ private int frameCount = 0;
 
     /* State contains the game map */ private boolean[][] state;
@@ -91,6 +94,80 @@ class Mover {
     public void setIncrement(int increment) {
         this.increment = increment;
     }
+
+    /* Chooses a new direction randomly for the ghost to move */
+    public char newDirection() {
+        int random;
+        char backwards = 'U';
+        int newX = getX(), newY = getY();
+        int lookX = getX(), lookY = getY();
+        Set<Character> set = new HashSet<Character>();
+        switch (getDirection()) {
+            case 'L':
+                backwards = 'R';
+                break;
+            case 'R':
+                backwards = 'L';
+                break;
+            case 'U':
+                backwards = 'D';
+                break;
+            case 'D':
+                backwards = 'U';
+                break;
+        }
+
+        char newDirection = backwards;
+        /* While we still haven't found a valid direction */
+        while (newDirection == backwards || !isValidDest(lookX, lookY)) {
+            /* If we've tried every location, turn around and break the loop */
+            if (set.size() == 3) {
+                newDirection = backwards;
+                break;
+            }
+
+            newX = getX();
+            newY = getY();
+            lookX = getX();
+            lookY = getY();
+
+            /* Randomly choose a direction */
+            random = (int) (Math.random() * 4) + 1;
+            if (random == 1) {
+                newDirection = 'L';
+                newX -= getIncrement();
+                lookX -= getIncrement();
+            } else if (random == 2) {
+                newDirection = 'R';
+                newX += getIncrement();
+                lookX += getGridSize();
+            } else if (random == 3) {
+                newDirection = 'U';
+                newY -= getIncrement();
+                lookY -= getIncrement();
+            } else if (random == 4) {
+                newDirection = 'D';
+                newY += getIncrement();
+                lookY += getGridSize();
+            }
+            if (newDirection != backwards) {
+                set.add(newDirection);
+            }
+        }
+        return newDirection;
+    }
+
+    public char getDirection() {
+        return direction;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
 }
 
 /* This is the pacman object */
@@ -127,63 +204,6 @@ class Player extends Mover {
         this.setY(y);
         setCurrDirection('L');
         setDesiredDirection('L');
-    }
-
-
-    /* This function is used for demoMode.  It is copied from the Ghost class.  See that for comments */
-    public char newDirection() {
-        int random;
-        char backwards = 'U';
-        int newX = getX(), newY = getY();
-        int lookX = getX(), lookY = getY();
-        Set<Character> set = new HashSet<Character>();
-        switch (getDirection()) {
-            case 'L':
-                backwards = 'R';
-                break;
-            case 'R':
-                backwards = 'L';
-                break;
-            case 'U':
-                backwards = 'D';
-                break;
-            case 'D':
-                backwards = 'U';
-                break;
-        }
-        char newDirection = backwards;
-        while (newDirection == backwards || !isValidDest(lookX, lookY)) {
-            if (set.size() == 3) {
-                newDirection = backwards;
-                break;
-            }
-            newX = getX();
-            newY = getY();
-            lookX = getX();
-            lookY = getY();
-            random = (int) (Math.random() * 4) + 1;
-            if (random == 1) {
-                newDirection = 'L';
-                newX -= getIncrement();
-                lookX -= getIncrement();
-            } else if (random == 2) {
-                newDirection = 'R';
-                newX += getIncrement();
-                lookX += getGridSize();
-            } else if (random == 3) {
-                newDirection = 'U';
-                newY -= getIncrement();
-                lookY -= getIncrement();
-            } else if (random == 4) {
-                newDirection = 'D';
-                newY += getIncrement();
-                lookY += getGridSize();
-            }
-            if (newDirection != backwards) {
-                set.add(newDirection);
-            }
-        }
-        return newDirection;
     }
 
     /* This function is used for demoMode.  It is copied from the Ghost class.  See that for comments */
@@ -403,13 +423,9 @@ class Player extends Mover {
 
 /* Ghost class controls the ghost. */
 class Ghost extends Mover {
-    /* Direction ghost is heading */ private char direction;
 
     /* Last ghost location*/ private int lastX;
     private int lastY;
-
-    /* Current ghost location */ private int x;
-    private int y;
 
     /* The pellet the ghost is on top of */ private int pelletX;
     private int pelletY;
@@ -452,68 +468,6 @@ class Ghost extends Mover {
         return false;
     }
 
-    /* Chooses a new direction randomly for the ghost to move */
-    public char newDirection() {
-        int random;
-        char backwards = 'U';
-        int newX = getX(), newY = getY();
-        int lookX = getX(), lookY = getY();
-        Set<Character> set = new HashSet<Character>();
-        switch (getDirection()) {
-            case 'L':
-                backwards = 'R';
-                break;
-            case 'R':
-                backwards = 'L';
-                break;
-            case 'U':
-                backwards = 'D';
-                break;
-            case 'D':
-                backwards = 'U';
-                break;
-        }
-
-        char newDirection = backwards;
-        /* While we still haven't found a valid direction */
-        while (newDirection == backwards || !isValidDest(lookX, lookY)) {
-            /* If we've tried every location, turn around and break the loop */
-            if (set.size() == 3) {
-                newDirection = backwards;
-                break;
-            }
-
-            newX = getX();
-            newY = getY();
-            lookX = getX();
-            lookY = getY();
-
-            /* Randomly choose a direction */
-            random = (int) (Math.random() * 4) + 1;
-            if (random == 1) {
-                newDirection = 'L';
-                newX -= getIncrement();
-                lookX -= getIncrement();
-            } else if (random == 2) {
-                newDirection = 'R';
-                newX += getIncrement();
-                lookX += getGridSize();
-            } else if (random == 3) {
-                newDirection = 'U';
-                newY -= getIncrement();
-                lookY -= getIncrement();
-            } else if (random == 4) {
-                newDirection = 'D';
-                newY += getIncrement();
-                lookY += getGridSize();
-            }
-            if (newDirection != backwards) {
-                set.add(newDirection);
-            }
-        }
-        return newDirection;
-    }
-
     /* Random move function for ghost */
     public void move() {
         setLastX(getX());
@@ -541,10 +495,6 @@ class Ghost extends Mover {
         }
     }
 
-    public char getDirection() {
-        return direction;
-    }
-
     public void setDirection(char direction) {
         this.direction = direction;
     }
@@ -565,16 +515,8 @@ class Ghost extends Mover {
         this.lastY = lastY;
     }
 
-    public int getX() {
-        return x;
-    }
-
     public void setX(int x) {
         this.x = x;
-    }
-
-    public int getY() {
-        return y;
     }
 
     public void setY(int y) {
