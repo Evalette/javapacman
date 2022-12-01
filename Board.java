@@ -206,7 +206,7 @@ class Player extends Mover {
                 if (isValidDest(getX() - getIncrement(), getY())) {
                     setX(getX() - getIncrement());
                 } else if (getY() == 9 * getGridSize() && getX() < 2 * getGridSize()) {
-                    setX(getMax() - getGridSize() * 1);
+                    setX(getMax() - getGridSize());
                     setTeleport(true);
                 }
                 break;
@@ -214,7 +214,7 @@ class Player extends Mover {
                 if (isValidDest(getX() + getGridSize(), getY())) {
                     setX(getX() + getIncrement());
                 } else if (getY() == 9 * getGridSize() && getX() > getMax() - getGridSize() * 2) {
-                    setX(1 * getGridSize());
+                    setX(getGridSize());
                     setTeleport(true);
                 }
                 break;
@@ -261,14 +261,14 @@ class Player extends Mover {
                 case 'L':
                     if (isValidDest(getX() - getIncrement(), getY())) setX(getX() - getIncrement());
                     else if (getY() == 9 * gridSize && getX() < 2 * gridSize) {
-                        setX(getMax() - gridSize * 1);
+                        setX(getMax() - gridSize);
                         setTeleport(true);
                     }
                     break;
                 case 'R':
                     if (isValidDest(getX() + gridSize, getY())) setX(getX() + getIncrement());
                     else if (getY() == 9 * gridSize && getX() > getMax() - gridSize * 2) {
-                        setX(1 * gridSize);
+                        setX(gridSize);
                         setTeleport(true);
                     }
                     break;
