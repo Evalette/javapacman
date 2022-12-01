@@ -46,11 +46,7 @@ public class Pacman implements MouseListener, KeyListener {
         stepFrame(true);
 
         /* Create a timer that calls stepFrame every 30 milliseconds */
-        frameTimer = new javax.swing.Timer(30, new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                stepFrame(false);
-            }
-        });
+        frameTimer = new javax.swing.Timer(30, e -> stepFrame(false));
 
         /* Start the timer */
         frameTimer.start();
