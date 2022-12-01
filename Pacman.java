@@ -277,6 +277,6 @@ public class Pacman implements MouseListener, KeyListener {
 
     /* Main function simply creates a new pacman instance*/
     public static void main(String[] args) {
-        Pacman c = new Pacman();
+        new Pacman();
     }
 }
