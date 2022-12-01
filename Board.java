@@ -49,10 +49,7 @@ class Mover {
     public boolean isValidDest(int x, int y) {
     /* The first statements check that the x and y are inbounds.  The last statement checks the map to
        see if it's a valid location */
-        if ((((x) % 20 == 0) || ((y) % 20) == 0) && 20 <= x && x < 400 && 20 <= y && y < 400 && getState()[x / 20 - 1][y / 20 - 1]) {
-            return true;
-        }
-        return false;
+        return (((x) % 20 == 0) || ((y) % 20) == 0) && 20 <= x && x < 400 && 20 <= y && y < 400 && getState()[x / 20 - 1][y / 20 - 1];
     }
 
     public int getFrameCount() {
@@ -193,10 +190,7 @@ class Player extends Mover {
 
     /* This function is used for demoMode.  It is copied from the Ghost class.  See that for comments */
     public boolean isChoiceDest() {
-        if (getX() % getGridSize() == 0 && getY() % getGridSize() == 0) {
-            return true;
-        }
-        return false;
+        return getX() % getGridSize() == 0 && getY() % getGridSize() == 0;
     }
 
     /* This function is used for demoMode.  It is copied from the Ghost class.  See that for comments */
@@ -447,10 +441,7 @@ class Ghost extends Mover {
 
     /* Determines if the location is one where the ghost has to make a decision*/
     public boolean isChoiceDest() {
-        if (getX() % getGridSize() == 0 && getY() % getGridSize() == 0) {
-            return true;
-        }
-        return false;
+        return getX() % getGridSize() == 0 && getY() % getGridSize() == 0;
     }
 
     /* Random move function for ghost */
@@ -621,7 +612,7 @@ public class Board extends JPanel {
             sc = new Scanner(file);
             highScore = sc.nextInt();
             sc.close();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -632,7 +623,7 @@ public class Board extends JPanel {
             out = new PrintWriter("highScores.txt");
             out.println(score);
             out.close();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         highScore = score;
         clearHighScores = true;
@@ -645,7 +636,7 @@ public class Board extends JPanel {
             out = new PrintWriter("highScores.txt");
             out.println("0");
             out.close();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         highScore = 0;
         clearHighScores = true;
