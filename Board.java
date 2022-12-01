@@ -9,26 +9,26 @@ import java.io.*;
 
 /* Both Player and Ghost inherit Mover.  Has generic functions relevant to both*/
 class Mover {
-    /* Framecount is used to count animation frames*/ int frameCount = 0;
+    /* Framecount is used to count animation frames*/ private int frameCount = 0;
 
-    /* State contains the game map */ boolean[][] state;
+    /* State contains the game map */ private boolean[][] state;
 
     /* gridSize is the size of one square in the game.
        max is the height/width of the game.
        increment is the speed at which the object moves,
-       1 increment per move() call */ int gridSize;
-    int max;
-    int increment;
+       1 increment per move() call */ private int gridSize;
+    private int max;
+    private int increment;
 
     /* Generic constructor */
     public Mover() {
-        gridSize = 20;
-        increment = 4;
-        max = 400;
-        state = new boolean[20][20];
+        setGridSize(20);
+        setIncrement(4);
+        setMax(400);
+        setState(new boolean[20][20]);
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 20; j++) {
-                state[i][j] = false;
+                getState()[i][j] = false;
             }
         }
     }
@@ -37,7 +37,7 @@ class Mover {
     public void updateState(boolean[][] state) {
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 20; j++) {
-                this.state[i][j] = state[i][j];
+                this.getState()[i][j] = state[i][j];
             }
         }
     }
@@ -46,10 +46,50 @@ class Mover {
     public boolean isValidDest(int x, int y) {
     /* The first statements check that the x and y are inbounds.  The last statement checks the map to
        see if it's a valid location */
-        if ((((x) % 20 == 0) || ((y) % 20) == 0) && 20 <= x && x < 400 && 20 <= y && y < 400 && state[x / 20 - 1][y / 20 - 1]) {
+        if ((((x) % 20 == 0) || ((y) % 20) == 0) && 20 <= x && x < 400 && 20 <= y && y < 400 && getState()[x / 20 - 1][y / 20 - 1]) {
             return true;
         }
         return false;
+    }
+
+    public int getFrameCount() {
+        return frameCount;
+    }
+
+    public void setFrameCount(int frameCount) {
+        this.frameCount = frameCount;
+    }
+
+    public boolean[][] getState() {
+        return state;
+    }
+
+    public void setState(boolean[][] state) {
+        this.state = state;
+    }
+
+    public int getGridSize() {
+        return gridSize;
+    }
+
+    public void setGridSize(int gridSize) {
+        this.gridSize = gridSize;
+    }
+
+    public int getMax() {
+        return max;
+    }
+
+    public void setMax(int max) {
+        this.max = max;
+    }
+
+    public int getIncrement() {
+        return increment;
+    }
+
+    public void setIncrement(int increment) {
+        this.increment = increment;
     }
 }
 
@@ -79,8 +119,8 @@ class Player extends Mover {
 
         teleport = false;
         pelletsEaten = 0;
-        pelletX = x / gridSize - 1;
-        pelletY = y / gridSize - 1;
+        pelletX = x / getGridSize() - 1;
+        pelletY = y / getGridSize() - 1;
         this.lastX = x;
         this.lastY = y;
         this.x = x;
@@ -124,20 +164,20 @@ class Player extends Mover {
             random = (int) (Math.random() * 4) + 1;
             if (random == 1) {
                 newDirection = 'L';
-                newX -= increment;
-                lookX -= increment;
+                newX -= getIncrement();
+                lookX -= getIncrement();
             } else if (random == 2) {
                 newDirection = 'R';
-                newX += increment;
-                lookX += gridSize;
+                newX += getIncrement();
+                lookX += getGridSize();
             } else if (random == 3) {
                 newDirection = 'U';
-                newY -= increment;
-                lookY -= increment;
+                newY -= getIncrement();
+                lookY -= getIncrement();
             } else if (random == 4) {
                 newDirection = 'D';
-                newY += increment;
-                lookY += gridSize;
+                newY += getIncrement();
+                lookY += getGridSize();
             }
             if (newDirection != backwards) {
                 set.add(new Character(newDirection));
@@ -148,7 +188,7 @@ class Player extends Mover {
 
     /* This function is used for demoMode.  It is copied from the Ghost class.  See that for comments */
     public boolean isChoiceDest() {
-        if (x % gridSize == 0 && y % gridSize == 0) {
+        if (x % getGridSize() == 0 && y % getGridSize() == 0) {
             return true;
         }
         return false;
@@ -163,30 +203,30 @@ class Player extends Mover {
         }
         switch (direction) {
             case 'L':
-                if (isValidDest(x - increment, y)) {
-                    x -= increment;
-                } else if (y == 9 * gridSize && x < 2 * gridSize) {
-                    x = max - gridSize * 1;
+                if (isValidDest(x - getIncrement(), y)) {
+                    x -= getIncrement();
+                } else if (y == 9 * getGridSize() && x < 2 * getGridSize()) {
+                    x = getMax() - getGridSize() * 1;
                     teleport = true;
                 }
                 break;
             case 'R':
-                if (isValidDest(x + gridSize, y)) {
-                    x += increment;
-                } else if (y == 9 * gridSize && x > max - gridSize * 2) {
-                    x = 1 * gridSize;
+                if (isValidDest(x + getGridSize(), y)) {
+                    x += getIncrement();
+                } else if (y == 9 * getGridSize() && x > getMax() - getGridSize() * 2) {
+                    x = 1 * getGridSize();
                     teleport = true;
                 }
                 break;
             case 'U':
-                if (isValidDest(x, y - increment)) y -= increment;
+                if (isValidDest(x, y - getIncrement())) y -= getIncrement();
                 break;
             case 'D':
-                if (isValidDest(x, y + gridSize)) y += increment;
+                if (isValidDest(x, y + getGridSize())) y += getIncrement();
                 break;
         }
         currDirection = direction;
-        frameCount++;
+        setFrameCount(getFrameCount() + 1);
     }
 
     /* The move function moves the pacman for one frame in non demo mode */
@@ -202,16 +242,16 @@ class Player extends Mover {
                 (desiredDirection == 'L' && currDirection == 'R') || (desiredDirection == 'R' && currDirection == 'L') || (desiredDirection == 'U' && currDirection == 'D') || (desiredDirection == 'D' && currDirection == 'U')) {
             switch (desiredDirection) {
                 case 'L':
-                    if (isValidDest(x - increment, y)) x -= increment;
+                    if (isValidDest(x - getIncrement(), y)) x -= getIncrement();
                     break;
                 case 'R':
-                    if (isValidDest(x + gridSize, y)) x += increment;
+                    if (isValidDest(x + gridSize, y)) x += getIncrement();
                     break;
                 case 'U':
-                    if (isValidDest(x, y - increment)) y -= increment;
+                    if (isValidDest(x, y - getIncrement())) y -= getIncrement();
                     break;
                 case 'D':
-                    if (isValidDest(x, y + gridSize)) y += increment;
+                    if (isValidDest(x, y + gridSize)) y += getIncrement();
                     break;
             }
         }
@@ -219,24 +259,24 @@ class Player extends Mover {
         if (lastX == x && lastY == y) {
             switch (currDirection) {
                 case 'L':
-                    if (isValidDest(x - increment, y)) x -= increment;
+                    if (isValidDest(x - getIncrement(), y)) x -= getIncrement();
                     else if (y == 9 * gridSize && x < 2 * gridSize) {
-                        x = max - gridSize * 1;
+                        x = getMax() - gridSize * 1;
                         teleport = true;
                     }
                     break;
                 case 'R':
-                    if (isValidDest(x + gridSize, y)) x += increment;
-                    else if (y == 9 * gridSize && x > max - gridSize * 2) {
+                    if (isValidDest(x + gridSize, y)) x += getIncrement();
+                    else if (y == 9 * gridSize && x > getMax() - gridSize * 2) {
                         x = 1 * gridSize;
                         teleport = true;
                     }
                     break;
                 case 'U':
-                    if (isValidDest(x, y - increment)) y -= increment;
+                    if (isValidDest(x, y - getIncrement())) y -= getIncrement();
                     break;
                 case 'D':
-                    if (isValidDest(x, y + gridSize)) y += increment;
+                    if (isValidDest(x, y + gridSize)) y += getIncrement();
                     break;
             }
         }
@@ -252,15 +292,15 @@ class Player extends Mover {
             /* Otherwise, clear the stopped flag and increment the frameCount for animation purposes*/
         else {
             stopped = false;
-            frameCount++;
+            setFrameCount(getFrameCount() + 1);
         }
     }
 
     /* Update what pellet the pacman is on top of */
     public void updatePellet() {
-        if (x % gridSize == 0 && y % gridSize == 0) {
-            pelletX = x / gridSize - 1;
-            pelletY = y / gridSize - 1;
+        if (x % getGridSize() == 0 && y % getGridSize() == 0) {
+            pelletX = x / getGridSize() - 1;
+            pelletY = y / getGridSize() - 1;
         }
     }
 }
@@ -282,8 +322,8 @@ class Ghost extends Mover {
     /*Constructor places ghost and updates states*/
     public Ghost(int x, int y) {
         direction = 'L';
-        pelletX = x / gridSize - 1;
-        pelletY = x / gridSize - 1;
+        pelletX = x / getGridSize() - 1;
+        pelletY = x / getGridSize() - 1;
         lastPelletX = pelletX;
         lastPelletY = pelletY;
         this.lastX = x;
@@ -295,8 +335,8 @@ class Ghost extends Mover {
     /* update pellet status */
     public void updatePellet() {
         int tempX, tempY;
-        tempX = x / gridSize - 1;
-        tempY = y / gridSize - 1;
+        tempX = x / getGridSize() - 1;
+        tempY = y / getGridSize() - 1;
         if (tempX != pelletX || tempY != pelletY) {
             lastPelletX = pelletX;
             lastPelletY = pelletY;
@@ -308,7 +348,7 @@ class Ghost extends Mover {
 
     /* Determines if the location is one where the ghost has to make a decision*/
     public boolean isChoiceDest() {
-        if (x % gridSize == 0 && y % gridSize == 0) {
+        if (x % getGridSize() == 0 && y % getGridSize() == 0) {
             return true;
         }
         return false;
@@ -354,20 +394,20 @@ class Ghost extends Mover {
             random = (int) (Math.random() * 4) + 1;
             if (random == 1) {
                 newDirection = 'L';
-                newX -= increment;
-                lookX -= increment;
+                newX -= getIncrement();
+                lookX -= getIncrement();
             } else if (random == 2) {
                 newDirection = 'R';
-                newX += increment;
-                lookX += gridSize;
+                newX += getIncrement();
+                lookX += getGridSize();
             } else if (random == 3) {
                 newDirection = 'U';
-                newY -= increment;
-                lookY -= increment;
+                newY -= getIncrement();
+                lookY -= getIncrement();
             } else if (random == 4) {
                 newDirection = 'D';
-                newY += increment;
-                lookY += gridSize;
+                newY += getIncrement();
+                lookY += getGridSize();
             }
             if (newDirection != backwards) {
                 set.add(new Character(newDirection));
@@ -389,16 +429,16 @@ class Ghost extends Mover {
         /* If that direction is valid, move that way */
         switch (direction) {
             case 'L':
-                if (isValidDest(x - increment, y)) x -= increment;
+                if (isValidDest(x - getIncrement(), y)) x -= getIncrement();
                 break;
             case 'R':
-                if (isValidDest(x + gridSize, y)) x += increment;
+                if (isValidDest(x + getGridSize(), y)) x += getIncrement();
                 break;
             case 'U':
-                if (isValidDest(x, y - increment)) y -= increment;
+                if (isValidDest(x, y - getIncrement())) y -= getIncrement();
                 break;
             case 'D':
-                if (isValidDest(x, y + gridSize)) y += increment;
+                if (isValidDest(x, y + getGridSize())) y += getIncrement();
                 break;
         }
     }
@@ -815,7 +855,7 @@ public class Board extends JPanel {
             /* Send the game map to player and all ghosts */
             player.updateState(state);
             /* Don't let the player go in the ghost box*/
-            player.state[9][7] = false;
+            player.getState()[9][7] = false;
             ghost1.updateState(state);
             ghost2.updateState(state);
             ghost3.updateState(state);
@@ -948,30 +988,30 @@ public class Board extends JPanel {
 
 
         /*Draw the ghosts */
-        if (ghost1.frameCount < 5) {
+        if (ghost1.getFrameCount() < 5) {
             /* Draw first frame of ghosts */
             g.drawImage(ghost10, ghost1.x, ghost1.y, Color.BLACK, null);
             g.drawImage(ghost20, ghost2.x, ghost2.y, Color.BLACK, null);
             g.drawImage(ghost30, ghost3.x, ghost3.y, Color.BLACK, null);
             g.drawImage(ghost40, ghost4.x, ghost4.y, Color.BLACK, null);
-            ghost1.frameCount++;
+            ghost1.setFrameCount(ghost1.getFrameCount() + 1);
         } else {
             /* Draw second frame of ghosts */
             g.drawImage(ghost11, ghost1.x, ghost1.y, Color.BLACK, null);
             g.drawImage(ghost21, ghost2.x, ghost2.y, Color.BLACK, null);
             g.drawImage(ghost31, ghost3.x, ghost3.y, Color.BLACK, null);
             g.drawImage(ghost41, ghost4.x, ghost4.y, Color.BLACK, null);
-            if (ghost1.frameCount >= 10) ghost1.frameCount = 0;
-            else ghost1.frameCount++;
+            if (ghost1.getFrameCount() >= 10) ghost1.setFrameCount(0);
+            else ghost1.setFrameCount(ghost1.getFrameCount() + 1);
         }
 
         /* Draw the pacman */
-        if (player.frameCount < 5) {
+        if (player.getFrameCount() < 5) {
             /* Draw mouth closed */
             g.drawImage(pacmanImage, player.x, player.y, Color.BLACK, null);
         } else {
             /* Draw mouth open in appropriate direction */
-            if (player.frameCount >= 10) player.frameCount = 0;
+            if (player.getFrameCount() >= 10) player.setFrameCount(0);
 
             switch (player.currDirection) {
                 case 'L':
